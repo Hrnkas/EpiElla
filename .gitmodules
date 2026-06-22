@@ -1,0 +1,3 @@
+[submodule "api/vendor/epiphany"]
+	path = api/vendor/epiphany
+	url = https://github.com/Hrnkas/epiphany

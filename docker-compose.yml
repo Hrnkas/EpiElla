@@ -1,0 +1,73 @@
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    env_file:
+      - .env
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - web_dist:/usr/share/nginx/html:ro
+    depends_on:
+      api:
+        condition: service_started
+      web:
+        condition: service_started
+
+  web:
+    build:
+      context: ./web
+      args:
+        VITE_API_BASE: ${VITE_API_BASE:-}
+    volumes:
+      - web_dist:/output
+
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    env_file:
+      - .env
+    environment:
+      DB_DRIVER: ${DB_DRIVER:-sqlite}
+      DB_HOST: ${DB_HOST:-db}
+      DB_NAME: ${DB_NAME:-epiella}
+      DB_USER: ${DB_USER:-epiella}
+      DB_PASS: ${DB_PASS:-secret}
+      DB_PORT: ${DB_PORT:-3306}
+      SQLITE_PATH: ${SQLITE_PATH:-/var/data/epiella.sqlite}
+      JWT_SECRET: ${JWT_SECRET:-change-me}
+      JWT_ACCESS_TTL: ${JWT_ACCESS_TTL:-3600}
+      JWT_REFRESH_TTL: ${JWT_REFRESH_TTL:-2592000}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@localhost}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-changeme}
+    volumes:
+      - sqlite_data:/var/data
+    depends_on:
+      db:
+        condition: service_healthy
+        required: false
+
+  db:
+    image: mariadb:11
+    profiles:
+      - mysql
+    environment:
+      MARIADB_DATABASE: ${DB_NAME:-epiella}
+      MARIADB_USER: ${DB_USER:-epiella}
+      MARIADB_PASSWORD: ${DB_PASS:-secret}
+      MARIADB_ROOT_PASSWORD: ${DB_PASS:-secret}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  web_dist:
+  sqlite_data:
+  mysql_data:

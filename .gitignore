@@ -1,0 +1,14 @@
+.env
+data/
+*.sqlite
+*.sqlite-journal
+api/vendor/firebase/
+api/vendor/composer/
+api/composer.lock
+web/node_modules/
+web/dist/
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/

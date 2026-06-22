@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Records | EpiElla</title>
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script type="module" src="/epiella/main.js"></script>
+</head>
+<body data-shell="admin" data-page="records" data-breadcrumb="Home > Records">
+
+<main class="main">
+<div class="page-wrapper">
+
+  <div class="page-header">
+    <div class="page-header-row">
+      <div>
+        <div class="page-pretitle">Data</div>
+        <h1 class="page-title">JSON Records</h1>
+      </div>
+      <div class="page-actions">
+        <button class="btn btn-outline" id="records-refresh" type="button">Refresh</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row col-2">
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">New record</div>
+          <div class="card-subtitle">POST to /api/records.json</div>
+        </div>
+      </div>
+      <form id="record-form" class="card-body">
+        <div class="form-group">
+          <label class="form-label" for="title">Title</label>
+          <input type="text" name="title" id="title" class="form-control" placeholder="My record" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="payload">Payload (JSON)</label>
+          <textarea name="payload" id="payload" class="form-control" rows="5" placeholder='{"key": "value"}'></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Create record</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Your records</div>
+          <div class="card-subtitle">Loaded via httpAdapter from the API.</div>
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table" data-datatable data-page-length="25">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Payload</th>
+              <th>Created</th>
+              <th data-orderable="false">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="records-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+</main>
+
+</body>
+</html>

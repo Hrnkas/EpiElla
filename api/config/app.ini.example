@@ -1,0 +1,5 @@
+; EpiElla API configuration example
+; Copy to app.ini and customize if using Epiphany config-based routes
+
+[app]
+name = EpiElla
