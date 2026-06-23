@@ -13,6 +13,9 @@
     ]
   },
   "config": {
-    "vendor-dir": "vendor/composer"
+    "vendor-dir": "vendor/composer",
+    "audit": {
+      "block-insecure": false
+    }
   }
 }

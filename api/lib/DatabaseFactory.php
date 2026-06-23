@@ -47,6 +47,9 @@ class DatabaseFactory
         }
 
         $path = $_ENV['SQLITE_PATH'] ?? dirname(__DIR__, 2) . '/data/epiella.sqlite';
+        if (!preg_match('#^(?:/|[A-Za-z]:[\\\\/])#', $path)) {
+            $path = dirname(__DIR__, 2) . '/' . str_replace('\\', '/', $path);
+        }
         $dir = dirname($path);
         if (!is_dir($dir)) {
             mkdir($dir, 0755, true);

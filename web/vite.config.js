@@ -23,6 +23,13 @@ function gentelellaOverlayPlugin() {
 }
 const EPIELLA_PAGES = new Set(['index.html', 'login.html', 'records.html']);
 
+const apiProxy = {
+  '/api': {
+    target: process.env.API_URL || 'http://localhost:8080',
+    changeOrigin: true
+  }
+};
+
 function discoverEntries() {
   const dir = resolve(import.meta.dirname, 'production');
   const out = {};
@@ -210,12 +217,7 @@ export default defineConfig(({ command }) => ({
     // /api/* → examples/express-sqlite (when running). Falls through 404 if
     // the example backend isn't up — frontend pages stay on seed data.
     // Override the target with API_URL if your backend lives elsewhere.
-    proxy: {
-      '/api': {
-        target: process.env.API_URL || 'http://localhost:8080',
-        changeOrigin: true
-      }
-    },
+    proxy: apiProxy,
     watch: {
       usePolling: false,
       interval: 100,
@@ -228,7 +230,8 @@ export default defineConfig(({ command }) => ({
   preview: {
     open: '/production/index.html',
     port: Number(process.env.PREVIEW_PORT) || 9174,
-    host: true
+    host: true,
+    proxy: apiProxy
   },
   optimizeDeps: {
     include: ['echarts', 'datatables.net', 'leaflet'],
